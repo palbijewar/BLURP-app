@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLURP - URL Shortening App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      max-width: 400px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    span {
+      display: none;
+      color: #333;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>BLURP - An URL Shortening App!</h1>
+        <input id="urlInput" type="text" placeholder="Enter URL">
+        <button id="shortenButton">Shorten</button>
+        <span id="shortUrl"></span>
+        
+      </div>
+  <script>
+   const shortenButton = document.querySelector('#shortenButton');
+const urlInput = document.querySelector('#urlInput');
+const shortUrlSpan = document.querySelector('#shortUrl');
+
+shortenButton.addEventListener('click', () => {
+  const longUrl = urlInput.value;
+
+  fetch('/url/shorten', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ longUrl }) // Use object shorthand notation
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        console.error(data.error);
+        return;
+      }
+      const shortUrl = data.shortUrl;
+      shortUrlSpan.textContent = 'Short URL: ' + shortUrl;
+      shortUrlSpan.style.display = 'block';
+    })
+    .catch(error => console.error(error));
+});
+
+  </script>
+</body>
+
+</html>

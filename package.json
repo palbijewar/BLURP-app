@@ -1,0 +1,18 @@
+{
+  "name": "blurp-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pal Bijewar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.2.2",
+    "redis": "^3.0.0",
+    "short-id": "^0.1.0-1",
+    "valid-url": "^1.0.9"
+  }
+}
