@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,40 +63,51 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>BLURP - An URL Shortening App!</h1>
-        <input id="urlInput" type="text" placeholder="Enter URL">
-        <button id="shortenButton">Shorten</button>
-        <span id="shortUrl"></span>
-      </div>
+  <div class="container">
+    <h1>BLURP - An URL Shortening App!</h1>
+    <input id="urlInput" type="text" placeholder="Enter URL">
+    <button id="shortenButton">Shorten</button>
+    <span id="shortUrl"></span>
+    <br>
+    <br>
+    <input id="redirectInput" type="text" placeholder="Enter URL Code">
+    <button id="redirectButton">Redirect</button>
+  </div>
+
   <script>
-   const shortenButton = document.querySelector('#shortenButton');
-const urlInput = document.querySelector('#urlInput');
-const shortUrlSpan = document.querySelector('#shortUrl');
+    const shortenButton = document.querySelector('#shortenButton');
+    const urlInput = document.querySelector('#urlInput');
+    const shortUrlSpan = document.querySelector('#shortUrl');
+    const redirectButton = document.querySelector('#redirectButton');
+    const redirectInput = document.querySelector('#redirectInput');
 
-shortenButton.addEventListener('click', () => {
-  const longUrl = urlInput.value;
+    shortenButton.addEventListener('click', () => {
+      const longUrl = urlInput.value;
 
-  fetch('/url/shorten', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ longUrl }) // Use object shorthand notation
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        console.error(data.error);
-        return;
-      }
-      const shortUrl = data.shortUrl;
-      shortUrlSpan.textContent = 'Short URL: ' + shortUrl;
-      shortUrlSpan.style.display = 'block';
-    })
-    .catch(error => console.error(error));
-});
+      fetch('/url/shorten', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ longUrl }) // Use object shorthand notation
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            console.error(data.error);
+            return;
+          }
+          const shortUrl = data.shortUrl;
+          shortUrlSpan.textContent = 'Short URL: ' + shortUrl;
+          shortUrlSpan.style.display = 'block';
+        })
+        .catch(error => console.error(error));
+    });
 
+    redirectButton.addEventListener('click', () => {
+      const urlCode = redirectInput.value;
+      window.location.href = '/url/' + urlCode;
+    });
   </script>
 </body>
 
