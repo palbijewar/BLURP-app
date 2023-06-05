@@ -23,7 +23,7 @@ const createUrl = async(req,res)=>{
     if(!isValid(longUrl)) return res.status(400).json({status:false,message:"invalid long URL!"});
 
     if(!validUrl.isWebUri(longUrl)){
-        return res.status(404).send({status:false,msg:"please Enter the Valid Url"});
+        return res.status(400).send({status:false,msg:"please Enter the Valid Url"});
     };
     
     const cachedUrl = await GET_ASYNC(longUrl);
