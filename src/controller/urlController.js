@@ -21,6 +21,7 @@ const createUrl = async(req,res)=>{
         return res.status(400).send({status:false,msg:"Provide Properties in the body"})
     }
     if(!isValid(longUrl)) return res.status(400).json({status:false,message:"invalid long URL!"});
+
     if(!validUrl.isWebUri(longUrl)){
         return res.status(404).send({status:false,msg:"please Enter the Valid Url"});
     };
@@ -28,10 +29,11 @@ const createUrl = async(req,res)=>{
     const cachedUrl = await GET_ASYNC(longUrl);
     if (cachedUrl) {
         // if present then send it to user
-      const { shortUrl } = JSON.parse(cachedUrl);
-      return res.status(200).send({
+      const { shortUrl , urlCode} = JSON.parse(cachedUrl);
+      return res.status(202).send({
         status: true,
         message: 'Already available',
+        urlCode,
         shortUrl,
       });
     }
@@ -80,7 +82,7 @@ const getUrl = async(req,res)=>{
     if (cachedUrl) {
         // if present then send it to user
       const { longUrl } = JSON.parse(cachedUrl);
-      return res.status(300).redirect(longUrl);
+      return res.status(302).redirect(longUrl);
     }
     
     const checkCode = await Url.findOne({urlCode});
