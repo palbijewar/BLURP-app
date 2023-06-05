@@ -17,7 +17,7 @@ mongoose.connect("mongodb+srv://palbijewar:1AjTHFUgEjOKutIq@cluster0.kft04uo.mon
 
 app.use('/',route);
 
-const PORT = 4000 || process.env.PORT;
+const PORT = 3000 || process.env.PORT;
 
 app.listen(PORT,()=>{
     console.log(`Server is listing on port ${PORT}`);
