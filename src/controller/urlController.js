@@ -1,8 +1,8 @@
 const Url = require('../model/url');
 const validUrl = require('valid-url');
 const shortId = require('short-id');
+const axios = require('axios');
 const {SET_ASYNC,GET_ASYNC} = require('../utils/utils');
-
 
 
 const isValid = (value) => {
@@ -11,11 +11,11 @@ const isValid = (value) => {
     return true;
 };    
 
-
-const baseUrl =  "http://localhost:3000/";
+const baseUrl =  "https://lunar-speckled-dive.glitch.me ";
 
 const createUrl = async(req,res)=>{
  try {
+  //validating the URL by empty body, datatype and external library 'valid-url' for 
     const longUrl = req.body.longUrl;
     if(Object.keys(longUrl).length < 1) {
         return res.status(400).send({status:false,msg:"Provide Properties in the body"})
@@ -25,10 +25,12 @@ const createUrl = async(req,res)=>{
     if(!validUrl.isWebUri(longUrl)){
         return res.status(400).send({status:false,msg:"please Enter the Valid Url"});
     };
-    
+    const urlAxios = await axios.get(longUrl);
+    if(urlAxios.status!==200) return res.status(400).json({status:false,message:"invalid url as per axios!"})
+    //checking if the longURL is present in the cache
     const cachedUrl = await GET_ASYNC(longUrl);
+    //giving ait as a proper response if present in the cache already
     if (cachedUrl) {
-        // if present then send it to user
       const { shortUrl , urlCode} = JSON.parse(cachedUrl);
       return res.status(202).send({
         status: true,
@@ -37,8 +39,8 @@ const createUrl = async(req,res)=>{
         shortUrl,
       });
     }
-
-    const url = await Url.findOne({longUrl});
+//finding if it is already present in the database if not in cache
+    const url = await Url.findOne({longUrl:longUrl});
     if(url){
         await SET_ASYNC(
             longUrl,
@@ -69,6 +71,7 @@ const createUrl = async(req,res)=>{
         'EX',
         24 * 60 * 60
       );
+  
     res.status(202).json({status:true,data:result});
  } catch (error) {
     res.status(400).json({status:false,message:error.message});
@@ -83,8 +86,7 @@ const getUrl = async(req,res)=>{
         // if present then send it to user
       const { longUrl } = JSON.parse(cachedUrl);
       return res.status(302).redirect(longUrl);
-    }
-    
+    };
     const checkCode = await Url.findOne({urlCode});
     
     if(!checkCode) return res.status(400).json({status:false,message:"invalid URL code!"});

@@ -8,11 +8,6 @@ router.get('/url/:urlCode', getUrl);
 module.exports = router;
 
 
-
-
-
-
-
 const urlController = require('../controller/urlController');
 
 //post create Url 
